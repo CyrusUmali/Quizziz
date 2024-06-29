@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/dist')));
+const staticFilesPath = path.resolve(__dirname, '..', 'client', 'dist');
+app.use(express.static(staticFilesPath));
 
 // API route
 app.get('/api', (req, res) => {
@@ -30,7 +31,7 @@ app.use('/auth', authRoutes);
 
 // All other requests should return the React app, so it can handle routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+  res.sendFile(path.join(staticFilesPath, 'index.html'));
 });
 
 // Start the server
