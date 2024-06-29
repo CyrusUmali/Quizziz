@@ -10,7 +10,6 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
-
 app.use(cors(corsOptions));
 
 // Middleware
@@ -31,7 +30,7 @@ app.use('/auth', authRoutes);
 
 // All other requests should return the React app, so it can handle routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
 });
 
 // Start the server
