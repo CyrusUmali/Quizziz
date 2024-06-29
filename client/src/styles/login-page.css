@@ -1,0 +1,263 @@
+.login-page-container header {
+ 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 10px;
+}
+
+
+.login-page-container a{
+
+    text-decoration: underline;
+    color: blue;
+    
+}
+
+.login-page-container header .login-svg{
+    position: absolute;
+    top: -10px;
+    z-index: -1;
+    left: -1px;
+    
+    
+}
+
+.login-page-container header i {
+
+
+    color: white;
+    font-size: 20px;
+    margin: 0px  5px; 
+
+}
+
+.login-page-container header .text-1 {
+    color: white;
+     font-size: 20px;
+     margin-left: 25px;
+     text-shadow: 
+     -1px -1px 0 #000,  
+     1px -1px 0 #000,
+     -1px 1px 0 #000,
+     1px 1px 0 #000;
+}
+
+.login-page-container header .text-2 {
+    color: rgb(255, 230, 0);
+    font-size: 38px;  
+    font-weight: 700;
+    margin-left: 52px;
+    text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+    line-height: 38px;
+}
+
+
+
+
+.login-page-container form {
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 30px;
+    margin-top: 85px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+
+
+
+}
+
+.login-page-container form .info-block{
+   padding: 10px;
+   bottom: -30px;
+   border: 1px solid lightgray;
+   border-radius: 8px;  color: dimgray;
+   /* background-color: white; */
+   /* background-color: rgb(255, 255, 255 , .55); */
+   background-color: rgba(255, 255, 255, .95); 
+      /* backdrop-filter: saturate(200%) blur(20px); */
+  
+   position: absolute;
+   opacity: 0;
+   transition: opacity 0.3s  ease;
+   z-index: -1;
+   /* box-shadow: rgba(50, 50, 93, 0.25) 9px 7px 14px -9px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; */
+}
+
+.login-page-container form .info-block.show{
+  
+   transition: opacity 0.3s  ease;
+   opacity: 1;
+   z-index: 1;
+  
+
+}
+
+
+.login-page-container form .info-block ul{
+ margin: unset ;
+ padding: 5px 17px;
+
+ font-size: 14px;
+ list-style:disc;
+ display: flex;
+ flex-direction: column;
+ gap: 5px;
+
+}
+
+.login-page-container form input {
+    /* all: unset; */
+    background-color: rgb(249 248 248);
+    /* background-color: whitesmoke; */
+    border: none !important;
+    padding: 9px 2px;
+    width: 100%;
+    text-indent: 12px;
+    border-radius: 3px;
+
+
+ /* border: 2px solid darkorange; */
+    /* background-color: blanchedalmond;  */  
+} 
+
+.login-page-container form .row {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+
+}
+
+
+.login-page-container form .row .item {
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    /* background-color: red; */
+    /* justify-content: center;
+   align-items: center; */
+
+
+}
+
+.login-page-container form .row .item .warning-wrapper {
+   background-color: blanchedalmond; 
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   justify-content: start; 
+   align-items: center;
+   font-size: 14px;
+   gap: 12px;
+   /* padding: 5px 3px; */
+   max-height: 0;
+   overflow: hidden;
+   margin-top: -30px;
+   transition: max-height 0.3s ease;
+   position: absolute;
+}
+
+.login-page-container form .row .item .warning-wrapper.show {
+   background-color: blanchedalmond;
+   border: 2px solid darkorange;
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   justify-content: start; 
+   align-items: center;
+   font-size: 14px;
+   gap: 12px;
+   padding: 5px 3px;
+   max-height: 100px;
+   transition: max-height 0.3s ease;
+}
+.login-page-container form .row .item .warning-wrapper i {
+   color: white;
+   background-color: orangered;
+   height: 20px;
+   width: 20px;
+   font-size: 12px;
+   border-radius: 50%; 
+   margin-left: 15px;
+   display: flex; 
+   justify-content: center;
+   align-items: center;
+   flex-shrink: 0;
+}
+
+.login-page-container form .row .forgot-password{
+    margin-left: 40px; 
+    white-space: nowrap;
+}
+
+
+.login-page-container form button {
+    background: linear-gradient(180deg, rgb(0, 91, 255) 0%, rgb(87.13, 147.03, 255) 100%);
+    border: none !important;
+    width: 320px;
+    border-radius: 26px;
+    padding: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    box-shadow: 3px 3px 6px dimgray;
+    margin-top: 10px;
+    transition: box-shadow 0.3s ease; 
+}
+
+.login-page-container form button:hover{
+
+box-shadow: 0px 0px 0px dimgray;
+
+}
+
+
+
+
+
+#loginAgreementCheckbox {
+    height: 20px;
+    width: 20px;
+   background-color: orange !important;
+   border-color: red !important;
+}
+
+
+.login-alternatives {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+
+@media screen and (min-width: 400px) {
+
+    .login-page-container{
+        height: 100vh;
+        width: 100%;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        z-index: -1;
+
+    }
+  }
