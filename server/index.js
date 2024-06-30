@@ -10,15 +10,13 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
-
 app.use(cors(corsOptions));
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/dist')));
+ 
 
 // API route
 app.get('/api', (req, res) => {
@@ -29,9 +27,10 @@ app.get('/api', (req, res) => {
 const authRoutes = require('./routes/auth.js');
 app.use('/auth', authRoutes);
 
-// All other requests should return the React app, so it can handle routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+ 
+// All other requests should return a 404 or handle accordingly
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Not Found' });
 });
 
 // Start the server
