@@ -1,9 +1,9 @@
 const express = require('express');
-const db = require("./connect");
+const db = require("../connect");
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client('460297050109-vg8lujpfnftm1bafbqsur8drtiv8tdic.apps.googleusercontent.com');
-const authenticateToken = require('./middleware/authenticateToken');
+const authenticateToken = require('../middleware/authenticateToken');
 // const { register } = require('../controllers/auth'); 
 
 const router = express.Router();
@@ -165,7 +165,7 @@ router.get('/quizzes/:categoryId/:userId', async (req, res) => {
         q.desc, 
         COUNT(qz.question_id) AS question_count,
         IFNULL(ua.answered_count, 0) AS answered_count
-      FROM Quizzes q
+      FROM quizzes q
       LEFT JOIN questions qz ON q.quiz_id = qz.quiz_id
       LEFT JOIN (
         SELECT 
@@ -205,7 +205,7 @@ router.get('/search-quizzes/:categoryId/:userId', async (req, res) => {
         q.desc, 
         COUNT(qz.question_id) AS question_count,
         IFNULL(ua.answered_count, 0) AS answered_count
-      FROM Quizzes q
+      FROM quizzes q
       LEFT JOIN questions qz ON q.quiz_id = qz.quiz_id
       LEFT JOIN (
         SELECT 
@@ -247,7 +247,7 @@ router.get('/count-quizzes', async (req, res) => {
       FROM quizcategories c
       LEFT JOIN (
         SELECT q.quiz_id, q.category_id
-        FROM Quizzes q
+        FROM quizzes q
         INNER JOIN questions qz ON q.quiz_id = qz.quiz_id
         GROUP BY q.quiz_id
       ) q ON c.quiz_categ_id = q.category_id
@@ -269,7 +269,7 @@ router.delete('/delete-quiz/:quizId', async (req, res) => {
 
   try {
     // Delete quiz from Quizzes table
-    const deleteQuizQuery = 'DELETE FROM Quizzes WHERE quiz_id = ?';
+    const deleteQuizQuery = 'DELETE FROM quizzes WHERE quiz_id = ?';
     await db.promise().query(deleteQuizQuery, [quizId]);
 
     res.status(200).json({ success: true, message: "Quiz deleted successfully" });
