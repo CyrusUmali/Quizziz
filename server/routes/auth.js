@@ -286,7 +286,7 @@ router.get('/count-quizzes', async (req, res) => {
     const countQuizzesPerCategoryQuery = `
       SELECT c.quiz_categ_id, COUNT(DISTINCT q.quiz_id) AS quizCount
       FROM quizcategories c
-      LEFT JOIN Quizzes q ON c.quiz_categ_id = q.category_id
+      LEFT JOIN quizzes q ON c.quiz_categ_id = q.category_id
       LEFT JOIN questions qz ON q.quiz_id = qz.quiz_id
       GROUP BY c.quiz_categ_id
       HAVING COUNT(qz.question_id) > 0
@@ -308,7 +308,7 @@ router.post('/save-quiz', async (req, res) => {
 
   try {
     // Insert quiz into Quizzes table
-    const insertQuizQuery = 'INSERT INTO Quizzes (category_id, quiz_name, `desc`) VALUES (?, ?, ?)';
+    const insertQuizQuery = 'INSERT INTO quizzes (category_id, quiz_name, `desc`) VALUES (?, ?, ?)';
     const insertQuizResult = await db.promise().query(insertQuizQuery, [quizCategory, quizTitle, '']);
     const quizId = insertQuizResult[0].insertId;
 
@@ -325,7 +325,7 @@ router.post('/save-question', async (req, res) => {
 
   try {
     // Insert question into Questions table
-    const insertQuestionQuery = 'INSERT INTO Questions (quiz_id, question, question_type) VALUES (?, ?, ?)';
+    const insertQuestionQuery = 'INSERT INTO questions (quiz_id, question, question_type) VALUES (?, ?, ?)';
     const insertQuestionResult = await db.promise().query(insertQuestionQuery, [quizId, questionText, questionType]);
     const questionId = insertQuestionResult[0].insertId;
 
@@ -334,13 +334,13 @@ router.post('/save-question', async (req, res) => {
       // Multiple Choice Question
       for (const option of options) {
         // Insert option into Options table
-        const insertOptionQuery = 'INSERT INTO Options (question_id, option_text) VALUES (?, ?)';
+        const insertOptionQuery = 'INSERT INTO options (question_id, option_text) VALUES (?, ?)';
         const insertOptionResult = await db.promise().query(insertOptionQuery, [questionId, option]);
         const optionId = insertOptionResult[0].insertId; // Retrieve the inserted option_id
 
         // Insert into CorrectAnswers table if it's a correct option
         if (correctOptions.includes(options.indexOf(option))) {
-          const insertCorrectAnswerQuery = 'INSERT INTO CorrectAnswers (question_id, option_id) VALUES (?, ?)';
+          const insertCorrectAnswerQuery = 'INSERT INTO correctanswers (question_id, option_id) VALUES (?, ?)';
           await db.promise().query(insertCorrectAnswerQuery, [questionId, optionId]);
         }
       }
@@ -350,12 +350,12 @@ router.post('/save-question', async (req, res) => {
         const correctAnswerText = options[0]; // Assuming options[0] contains the correct answer text
 
         // Insert correct answer text into Options table
-        const insertOptionQuery = 'INSERT INTO Options (question_id, option_text) VALUES (?, ?)';
+        const insertOptionQuery = 'INSERT INTO options (question_id, option_text) VALUES (?, ?)';
         const insertOptionResult = await db.promise().query(insertOptionQuery, [questionId, correctAnswerText]);
         const optionId = insertOptionResult[0].insertId; // Retrieve the inserted option_id
 
         // Insert into CorrectAnswers table
-        const insertCorrectAnswerQuery = 'INSERT INTO CorrectAnswers (question_id, option_id) VALUES (?, ?)';
+        const insertCorrectAnswerQuery = 'INSERT INTO correctanswers (question_id, option_id) VALUES (?, ?)';
         await db.promise().query(insertCorrectAnswerQuery, [questionId, optionId]);
       } else {
         console.error('No correct answer provided for single correct answer question');
@@ -378,7 +378,7 @@ router.post('/save-answer', async (req, res) => {
     const insertPromises = answers.map(answer => {
       const { user_id, question_id, answer_text, chosen_option_id, is_correct } = answer;
       const insertAnswerQuery = `
-          INSERT INTO UserAnswers (user_id_fk, question_id, answer, chosen_option_id, is_correct)
+          INSERT INTO useranswers (user_id_fk, question_id, answer, chosen_option_id, is_correct)
           VALUES (?, ?, ?, ?, ?)
       `;
       return db.promise().query(insertAnswerQuery, [user_id, question_id, answer_text, chosen_option_id, is_correct]);
@@ -413,11 +413,11 @@ router.get('/quiz-results/:quizId/:userId', async (req, res) => {
     ua.is_correct
 FROM
     Questions q
-LEFT JOIN Options o ON q.question_id = o.question_id
+LEFT JOIN options o ON q.question_id = o.question_id
 LEFT JOIN (
-    SELECT question_id, GROUP_CONCAT(option_id) AS option_id FROM CorrectAnswers GROUP BY question_id
+    SELECT question_id, GROUP_CONCAT(option_id) AS option_id FROM correctanswers GROUP BY question_id
 ) ca ON q.question_id = ca.question_id
-LEFT JOIN UserAnswers ua ON q.question_id = ua.question_id AND ua.user_id_fk = ?
+LEFT JOIN useranswers ua ON q.question_id = ua.question_id AND ua.user_id_fk = ?
 WHERE
     q.quiz_id = ?
 GROUP BY
@@ -508,9 +508,9 @@ router.get('/questions/:quizId', async (req, res) => {
       SELECT q.question_id, q.question, q.question_type,
              o.option_id, o.option_text,
              ca.option_id AS correct_option_id
-      FROM Questions q
-      LEFT JOIN Options o ON q.question_id = o.question_id
-      LEFT JOIN CorrectAnswers ca ON q.question_id = ca.question_id AND o.option_id = ca.option_id
+      FROM questions q
+      LEFT JOIN options o ON q.question_id = o.question_id
+      LEFT JOIN correctanswers ca ON q.question_id = ca.question_id AND o.option_id = ca.option_id
       WHERE q.quiz_id = ?
     `;
 
@@ -560,8 +560,8 @@ router.delete('/questions/:quizId/:userId', async (req, res) => {
     // Delete user answers based on quiz_id and user_id
     const deleteAnswersQuery = `
       DELETE ua
-      FROM UserAnswers ua
-      JOIN Questions q ON ua.question_id = q.question_id
+      FROM useranswers ua
+      JOIN questions q ON ua.question_id = q.question_id
       WHERE q.quiz_id = ? AND ua.user_id_fk = ?
     `;
 
@@ -593,9 +593,9 @@ router.get('/questions/edit/:quizId', async (req, res) => {
       SELECT q.question_id, q.question, q.question_type,
              o.option_id, o.option_text,
              ca.option_id AS correct_option_id
-      FROM Questions q
+      FROM questions q
       LEFT JOIN Options o ON q.question_id = o.question_id
-      LEFT JOIN CorrectAnswers ca ON q.question_id = ca.question_id AND o.option_id = ca.option_id
+      LEFT JOIN correctanswers ca ON q.question_id = ca.question_id AND o.option_id = ca.option_id
       WHERE q.quiz_id = ?
     `;
 
@@ -650,7 +650,7 @@ router.delete('/delete-question/:questionId', async (req, res) => {
 
   try {
     // Delete the question; cascading delete will handle associated options and correct answers
-    const deleteQuestionQuery = 'DELETE FROM Questions WHERE question_id = ?';
+    const deleteQuestionQuery = 'DELETE FROM questions WHERE question_id = ?';
     await db.promise().query(deleteQuestionQuery, [questionId]);
 
     res.status(200).json({ success: true, message: 'Question deleted successfully' });
@@ -670,14 +670,14 @@ router.put('/update-question/:questionId', async (req, res) => {
 
   try {
     // Update the question text and type
-    const updateQuestionQuery = 'UPDATE Questions SET question = ?, question_type = ? WHERE question_id = ?';
+    const updateQuestionQuery = 'UPDATE questions SET question = ?, question_type = ? WHERE question_id = ?';
     await db.promise().query(updateQuestionQuery, [questionText, questionType, questionId]);
 
     // Delete existing options and correct answers associated with the question
-    const deleteCorrectAnswersQuery = 'DELETE FROM CorrectAnswers WHERE question_id = ?';
+    const deleteCorrectAnswersQuery = 'DELETE FROM correctanswers WHERE question_id = ?';
     await db.promise().query(deleteCorrectAnswersQuery, [questionId]);
 
-    const deleteOptionsQuery = 'DELETE FROM Options WHERE question_id = ?';
+    const deleteOptionsQuery = 'DELETE FROM options WHERE question_id = ?';
     await db.promise().query(deleteOptionsQuery, [questionId]);
 
     // Handle options and correct answers based on question type
@@ -685,13 +685,13 @@ router.put('/update-question/:questionId', async (req, res) => {
       // Multiple Choice Question
       for (const option of options) {
         // Insert option into Options table
-        const insertOptionQuery = 'INSERT INTO Options (question_id, option_text) VALUES (?, ?)';
+        const insertOptionQuery = 'INSERT INTO options (question_id, option_text) VALUES (?, ?)';
         const insertOptionResult = await db.promise().query(insertOptionQuery, [questionId, option]);
         const optionId = insertOptionResult[0].insertId; // Retrieve the inserted option_id
 
         // Insert into CorrectAnswers table if it's a correct option
         if (correctOptions.includes(options.indexOf(option))) {
-          const insertCorrectAnswerQuery = 'INSERT INTO CorrectAnswers (question_id, option_id) VALUES (?, ?)';
+          const insertCorrectAnswerQuery = 'INSERT INTO correctanswers (question_id, option_id) VALUES (?, ?)';
           await db.promise().query(insertCorrectAnswerQuery, [questionId, optionId]);
         }
       }
@@ -701,12 +701,12 @@ router.put('/update-question/:questionId', async (req, res) => {
         const correctAnswerText = options[0]; // Assuming options[0] contains the correct answer text
 
         // Insert correct answer text into Options table
-        const insertOptionQuery = 'INSERT INTO Options (question_id, option_text) VALUES (?, ?)';
+        const insertOptionQuery = 'INSERT INTO options (question_id, option_text) VALUES (?, ?)';
         const insertOptionResult = await db.promise().query(insertOptionQuery, [questionId, correctAnswerText]);
         const optionId = insertOptionResult[0].insertId; // Retrieve the inserted option_id
 
         // Insert into CorrectAnswers table
-        const insertCorrectAnswerQuery = 'INSERT INTO CorrectAnswers (question_id, option_id) VALUES (?, ?)';
+        const insertCorrectAnswerQuery = 'INSERT INTO correctanswers (question_id, option_id) VALUES (?, ?)';
         await db.promise().query(insertCorrectAnswerQuery, [questionId, optionId]);
       } else {
         console.error('No correct answer provided for single correct answer question');
