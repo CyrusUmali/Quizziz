@@ -19,7 +19,8 @@ function PlayQuiz() {
 
 
 
-
+    const apiUrl = import.meta.env.VITE_API_URL;
+    
 
 
 
@@ -85,7 +86,7 @@ function PlayQuiz() {
         };
 
         // Send POST request to save the quiz
-        axios.post('http://localhost:3001/auth/save-quiz', postData)
+        axios.post(`${apiUrl}/auth/save-quiz`, postData)
             .then(response => {
 
                 console.log('Quiz saved successfully!');
@@ -115,7 +116,7 @@ function PlayQuiz() {
             navigate("/");
         }
 
-        axios.get('http://localhost:3001/auth/count-quizzes')
+        axios.get(`${apiUrl}/auth/count-quizzes`)
             .then((response) => {
                 if (response.data.success) {
 

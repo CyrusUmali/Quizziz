@@ -14,6 +14,10 @@ import questionMark from "../assets/Question.png";
 import LeftArrow from '../assets/leftarrow.png';
 import RightArrow from '../assets/rightarrow.png';
 import axios from 'axios'
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 function EditQuiz() {
     const { quizId } = useParams;
     const { user } = useContext(AuthContext);
@@ -55,7 +59,7 @@ function EditQuiz() {
         if (!currentQuestion && questions.length > 0) {
             navigate("/");
         } else {
-            axios.get(`http://localhost:3001/auth/questions/edit/${quizId}`)
+            axios.get(`${apiUrl}/auth/questions/edit/${quizId}`)
                 .then(response => {
                     console.log(response)
                     sessionStorage.setItem('questions', JSON.stringify(questions));
@@ -86,7 +90,7 @@ function EditQuiz() {
 
         if (questions[currentQuestionIndex].questionId === null) {
             axios
-                .post('http://localhost:3001/auth/save-question', {
+                .post(`${apiUrl}/auth/save-question`, {
                     quizId: sessionStorage.getItem('quizId'),
                     questionText: questions[currentQuestionIndex].questionText,
                     questionType: questions[currentQuestionIndex].questionType,
@@ -120,7 +124,7 @@ function EditQuiz() {
 
 
             axios
-                .put(`http://localhost:3001/auth/update-question/${currentQuestion.questionId}`, {
+                .put(`${apiUrl}/auth/update-question/${currentQuestion.questionId}`, {
                     quizId: sessionStorage.getItem('quizId'),
                     questionText: currentQuestion.questionText,
                     questionType: currentQuestion.questionType,
@@ -218,7 +222,7 @@ function EditQuiz() {
             if (questions.length > 1) {
                 const questionToDelete = questions[currentQuestionIndex].questionId; // Assuming each question has a unique id
 
-                axios.delete(`http://localhost:3001/auth/delete-question/${questionToDelete}`)
+                axios.delete(`${apiUrl}/auth/delete-question/${questionToDelete}`)
                     .then((response) => {
                         if (response.data.success) {
                             const newQuestions = questions.filter((_, index) => index !== currentQuestionIndex);

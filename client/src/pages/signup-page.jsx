@@ -8,6 +8,11 @@ import axios from 'axios';
 import '../styles/signup-page.css';
 import { jwtDecode } from 'jwt-decode';
 import Loading from './loading'
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+
 function SignupPage() {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -74,7 +79,7 @@ function SignupPage() {
 
         if (validateForm()) {
             setLoading(true); // Start loading
-            axios.post('http://localhost:3001/auth/register', {
+            axios.post(`${apiUrl}/auth/register`, {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 email: formData.email,
@@ -116,7 +121,7 @@ function SignupPage() {
                 })
                 .then(res => res.data);
 
-            axios.post('http://localhost:3001/auth/google', {
+            axios.post(`${apiUrl}/auth/google`, {
                 sub: userInfo.sub,
                 email: userInfo.email,
                 firstname: userInfo.given_name,

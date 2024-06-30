@@ -13,6 +13,10 @@ import Technology from '../assets/technology.png'
 import Sports from '../assets/sports.png'
 import Math from '../assets/math.png'
 import axios from 'axios'
+
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function CreateQuiz() {
 
     const { user, logout } = useContext(AuthContext);
@@ -64,7 +68,7 @@ function CreateQuiz() {
         };
 
         // Send POST request to save the quiz
-        axios.post('http://localhost:3001/auth/save-quiz', postData)
+        axios.post(`${apiUrl}/auth/save-quiz`, postData)
             .then(response => {
 
                 console.log('Quiz saved successfully!');
@@ -102,7 +106,7 @@ function CreateQuiz() {
 
         }
 
-        axios.get('http://localhost:3001/auth/count-quizzes')
+        axios.get(`${apiUrl}/auth/count-quizzes`)
             .then((response) => {
                 if (response.data.success) {
 

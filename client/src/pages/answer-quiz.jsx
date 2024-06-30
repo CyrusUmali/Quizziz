@@ -15,6 +15,12 @@ import gameStartSound from '../assets/gameStart.mp3';
 import correctAnswerSound from '../assets/correctAnswer.mp3';
 import wrongAnswerSound from '../assets/wrongAnswer.wav';
 
+
+// Import the environment variable
+const apiUrl = import.meta.env.VITE_API_URL;
+ 
+
+
 function AnswerQuiz() {
     const { quizId } = useParams();
     const { user } = useContext(AuthContext);
@@ -81,12 +87,12 @@ function AnswerQuiz() {
             navigate("/");
         }
 
-        axios.get(`http://localhost:3001/auth/questions/${quizId}`)
+        axios.get(`${apiUrl}/auth/questions/${quizId}`)
             .then(response => {
                 const sortedQuestions = response.data.questions.sort((a, b) => a.question_id - b.question_id);
                 setQuestions(sortedQuestions);
 
-                return axios.get(`http://localhost:3001/auth/quiz-results/${quizId}/${user.id}`);
+                return axios.get(`${apiUrl}/auth/quiz-results/${quizId}/${user.id}`);
             })
             .then(summaryResponse => {
                 const summaryData = summaryResponse.data;
@@ -274,7 +280,7 @@ function AnswerQuiz() {
             wrongAnswerAudioRef.current.play();
         }
 
-        axios.post('http://localhost:3001/auth/save-answer', { answers: [answerToSave] })
+        axios.post(`${apiUrl}/auth/save-answer`, { answers: [answerToSave] })
             .then(response => {
                 // console.log('Answers saved successfully');
                 setAnsweredQuestions(prev => ({

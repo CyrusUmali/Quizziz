@@ -10,6 +10,11 @@ import { BrowserRouter as Router, Route, Routes, useParams, Link, } from "react-
 import QuestionMark from '../assets/Question.png';
 import Flask from '../assets/flask.png';
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+
 function Quizzes() {
   const { user } = useContext(AuthContext);
   const { categoryId } = useParams();
@@ -37,7 +42,7 @@ function Quizzes() {
 
 
       // Fetch updated quizzes list
-      axios.get(`http://localhost:3001/auth/search-quizzes/${categoryId}/${user.id}`, {
+      axios.get(`${apiUrl}/auth/search-quizzes/${categoryId}/${user.id}`, {
 
         params: {
           searchTerm: searchValue
@@ -77,7 +82,7 @@ function Quizzes() {
 
     console.log('currentQuizId:', currentQuizId);
 
-    axios.delete(`http://localhost:3001/auth/delete-quiz/${currentQuizId}`)
+    axios.delete(`${apiUrl}/auth/delete-quiz/${currentQuizId}`)
       .then(response => {
         if (response.data.success) {
           console.log(response.data.message);
@@ -87,7 +92,7 @@ function Quizzes() {
 
 
           // Fetch updated quizzes list
-          axios.get(`http://localhost:3001/auth/quizzes/${categoryId}/${user.id}`)
+          axios.get(`${apiUrl}/auth/quizzes/${categoryId}/${user.id}`)
             .then(response => {
               setQuizzes(response.data.quizzes); // Update quizzes state with new data
             })
@@ -114,7 +119,7 @@ function Quizzes() {
 
     console.log('quizId', quizId);
 
-    axios.get(`http://localhost:3001/auth/questions/edit/${quizId}`)
+    axios.get(`${apiUrl}/auth/questions/edit/${quizId}`)
       .then(response => {
 
 
@@ -140,14 +145,14 @@ function Quizzes() {
 
 
 
-    axios.delete(`http://localhost:3001/auth/questions/${currentQuizId}/${user.id}`)
+    axios.delete(`${apiUrl}/auth/questions/${currentQuizId}/${user.id}`)
       .then(response => {
         if (response.data.success) {
           console.log(response.data.message);
           setShowRestart(!showRestart);
 
           // Fetch updated quizzes list
-          axios.get(`http://localhost:3001/auth/quizzes/${categoryId}/${user.id}`)
+          axios.get(`${apiUrl}/auth/quizzes/${categoryId}/${user.id}`)
             .then(response => {
               setQuizzes(response.data.quizzes); // Update quizzes state with new data
             })
@@ -170,7 +175,7 @@ function Quizzes() {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/auth/quizzes/${categoryId}/${user.id}`)
+    axios.get(`${apiUrl}/auth/quizzes/${categoryId}/${user.id}`)
       .then(response => {
         console.log('categId:', categoryId);
         console.log('quizzes:', response.data.quizzes);

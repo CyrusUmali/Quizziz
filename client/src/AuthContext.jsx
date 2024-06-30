@@ -2,6 +2,10 @@ import React, { createContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode'; // Ensure the correct import
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -24,7 +28,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', { email, password });
+      const response = await axios.post(`${apiUrl}/auth/login`, { email, password });
       if (response.data.success) {
         const token = response.data.token;
         localStorage.setItem('token', token);
@@ -42,7 +46,7 @@ const AuthProvider = ({ children }) => {
 
   const loginWithGoogle = async (googleIdToken) => {
     try {
-      const response = await axios.post('http://localhost:3001/auth/google/login', { idToken: googleIdToken });
+      const response = await axios.post(`${apiUrl}/auth/google/login`, { idToken: googleIdToken });
       if (response.data.success) {
         const token = response.data.token;
         localStorage.setItem('token', token);

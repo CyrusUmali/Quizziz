@@ -6,6 +6,10 @@ import axios from 'axios';
 import '../styles/quiz-results.css';
 import { AuthContext } from '../AuthContext';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+
 function QuizResults() {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -28,7 +32,7 @@ function QuizResults() {
         }
 
 
-        axios.get(`http://localhost:3001/auth/quiz-results/${quizId}/${user.id}`)
+        axios.get(`${apiUrl}/auth/quiz-results/${quizId}/${user.id}`)
             .then(response => {
                 console.log('response:', response);
                 setTotalScore({ score: response.data.totalScore, totalQuestions: response.data.totalQuestions });
