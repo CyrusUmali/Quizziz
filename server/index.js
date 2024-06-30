@@ -5,7 +5,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://quizziz-client-fsez.onrender.com/',  // Adjust the origin to your frontend's URL
+  origin: 'https://quizziz-client-fsez.onrender.com',  // Adjust the origin to your frontend's URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
