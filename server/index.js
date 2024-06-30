@@ -1,9 +1,9 @@
 const express = require('express');
-const db = require("../connect");
+const db = require("./connect");
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client('460297050109-vg8lujpfnftm1bafbqsur8drtiv8tdic.apps.googleusercontent.com');
-const authenticateToken = require('../middleware/authenticateToken');
+const authenticateToken = require('./middleware/authenticateToken');
 // const { register } = require('../controllers/auth'); 
 
 const router = express.Router();
