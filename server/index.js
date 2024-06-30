@@ -16,9 +16,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the React app
-const staticFilesPath = path.resolve(__dirname, '..', 'client', 'dist');
-app.use(express.static(staticFilesPath));
+ 
 
 // API route
 app.get('/api', (req, res) => {
@@ -29,9 +27,10 @@ app.get('/api', (req, res) => {
 const authRoutes = require('./routes/auth.js');
 app.use('/auth', authRoutes);
 
-// All other requests should return the React app, so it can handle routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(staticFilesPath, 'index.html'));
+ 
+// All other requests should return a 404 or handle accordingly
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Not Found' });
 });
 
 // Start the server
