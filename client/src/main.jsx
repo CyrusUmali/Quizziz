@@ -9,8 +9,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Router> <React.StrictMode>
     {/* <App /> */}
 
-
-    <GoogleOAuthProvider clientId="460297050109-vg8lujpfnftm1bafbqsur8drtiv8tdic.apps.googleusercontent.com">
+ 
+    <GoogleOAuthProvider clientId="539652987951-0v10hchr9pcuu5nf4838ou8mscu46ip0.apps.googleusercontent.com">
     
     <Quizziz/>
 
