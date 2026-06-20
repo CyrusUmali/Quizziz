@@ -28,10 +28,6 @@ const authRoutes = require('./routes/auth.js');
 app.use('/auth', authRoutes);
 
  
-// All other requests should return a 404 or handle accordingly
-app.use((req, res, next) => {
-  res.status(404).json({ message: 'Not Found' });
-});
 
 // Start the server
 const port = process.env.PORT || 3001;
